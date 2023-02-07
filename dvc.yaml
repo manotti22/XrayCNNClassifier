@@ -1,8 +1,22 @@
 stages:
   data_ingestion:
-    cmd: python src/deepClassifier/pipeline/stage_01_data_ingestion.py
+    cmd: python src/XraydeepClassifier/pipeline/st_01_data_ingestion.py
     deps:
-      - src/deepClassifier/pipeline/stage_01_data_ingestion.py
+      - src/XraydeepClassifier/pipeline/st_01_data_ingestion.py
       - configs/config.yaml
     outs:
       - artifacts/data_ingestion/Brain Data
+  
+   prepare_base_model:
+    cmd: python src/XraydeepClassifier/pipeline/st_02_prepare_base_model.py
+    deps:
+      - src/XraydeepClassifier/pipeline/st_02_prepare_base_model.py
+      - configs/config.yaml
+    params:
+      - IMAGE_SIZE
+      - INCLUDE_TOP
+      - CLASSES
+      - WEIGHTS
+      - LEARNING_RATE
+    outs:
+      - artifacts/prepare_base_model

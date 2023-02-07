@@ -1,6 +1,5 @@
 import os
 import urllib.request as request
-from zipfile import ZipFile
 from XraydeepClassifier.entity import DataIngestionConfig
 from XraydeepClassifier import logger
 from XraydeepClassifier.utils import get_size
@@ -8,6 +7,7 @@ from tqdm import tqdm
 from pathlib import Path
 import nibabel as nib
 import matplotlib.pyplot as plt
+import shutil
 
 
 class DataIngestion:
@@ -27,27 +27,29 @@ class DataIngestion:
         #This opens the file data.nii in the directory path/to/your/data relative to the current working directory, reads its contents, and stores them in the variable data.
 
         logger.info(f"{data} is pushed in: \n{data_path}")
-        else:
-            logger.info(f"data already exists of size: {get_size(Path(self.config.local_data_file))}")        
-
-    # Convert all nii to png
+    
+        logger.info(f"data already exists of size: {get_size(Path(self.config.local_data_file))}")        
 
 
-    nii_file= self.config.local_data_file
-    png_file=""
 
     def nii_to_png(nii_file, png_file):
+        def __init__(self, config: DataIngestionConfig):
+            self.config = config
+              # Convert all nii to png
+            data_path = Path(self.config.local_data_file)
+            nii_file= data_path
+            png_file=""
 
-    # Load NIfTI file
-       img = nib.load(nii_file)[0]
-    # Get image data
-       img_data = img.get_fdata()
-    # Plot the image data
-       plt.imshow(img_data[:, :, img_data.shape[-1]//2], cmap='gray')
-       plt.axis('off')
-    # Save the plot as a PNG file
-       plt.savefig(png_file, bbox_inches='tight', pad_inches=0, dpi=100)
-       plt.close()
+        # Load NIfTI file
+        img = nib.load(nii_file)[0]
+        # Get image data
+        img_data = img.get_fdata()
+        # Plot the image data
+        plt.imshow(img_data[:, :, img_data.shape[-1]//2], cmap='gray')
+        plt.axis('off')
+        # Save the plot as a PNG file
+        plt.savefig(png_file, bbox_inches='tight', pad_inches=0, dpi=100)
+        plt.close()
 
     def convert_all_niis(self):
     # Get list of all NIfTI files in the directory
@@ -59,7 +61,6 @@ class DataIngestion:
 
             nii_path = os.path.join(self.config.local_data_file, nii)
             png_path = os.path.join(self.config.local_data_file, nii.replace('.nii', '.png'))
-            nii_to_png(nii_path, png_path)
         logger.info("Png data converting succesfully...")
 
 

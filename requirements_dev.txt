@@ -13,6 +13,7 @@ joblib
 types-PyYAML
 scipy
 mlflow==1.26.1
+nibabel
 -e .
 
 ## Dev requirements
